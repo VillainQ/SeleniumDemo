@@ -13,15 +13,13 @@ namespace Common
         private static readonly ThreadLocal<IWebDriver> WebDriver = new ThreadLocal<IWebDriver>();
 
         public static IWebDriver Driver => WebDriver.Value;
-        private static string GeckoDriverPath = null;
-        private static string ChromeDriverPath = null;
 
         public static void Start(BrowserType browserType)
         {
             switch (browserType)
             {
                 case BrowserType.Firefox:
-                     FirefoxDriverService geckoService = FirefoxDriverService.CreateDefaultService(GeckoDriverPath);
+                     FirefoxDriverService geckoService = FirefoxDriverService.CreateDefaultService(AppDomain.CurrentDomain.BaseDirectory);
                     geckoService.Host = "::1";
                     var firefoxOptions = new FirefoxOptions();
                     firefoxOptions.AcceptInsecureCertificates = true;
@@ -36,7 +34,7 @@ namespace Common
                     options.AddUserProfilePreference("pdfjs.disabled", true);
                     options.AddArguments("--start-maximized");
                     options.Proxy = null;
-                    WebDriver.Value = new ChromeDriver(ChromeDriverPath, options);
+                    WebDriver.Value = new ChromeDriver(AppDomain.CurrentDomain.BaseDirectory, options);
                     break;
                 default:
                     throw new NotSupportedException(
